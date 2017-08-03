@@ -6,6 +6,7 @@ from keras.losses import categorical_crossentropy
 import numpy as np
 import os
 import argparse
+import matplotlib.pyplot as plt
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
@@ -20,13 +21,13 @@ parser.add_argument(
 
 def main(args):
 
-    # Instantiate model
-    model = Xception(include_top=True, weights=None, classes=102)
-
     # hyper parameters
-    batch_size = 8
+    batch_size = 16
     num_classes = 102
-    epochs = 100
+    epochs = 200
+
+    # Instantiate model
+    model = Xception(include_top=True, weights=None, classes=num_classes)
 
     # prepare data
     x_train = np.load('x_train.npy')
@@ -45,7 +46,7 @@ def main(args):
     )
 
     # learning section
-    model.fit(
+    hist = model.fit(
         x_train,
         y_train,
         batch_size=batch_size,
@@ -58,6 +59,31 @@ def main(args):
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
+
+    # save graphs
+    acc = hist.history['acc']
+    val_acc = hist.history['val_acc']
+    loss = hist.history['loss']
+    val_loss = hist.history['val_loss']
+
+    plt.plot(range(acc), loss, marker='.', label='acc')
+    plt.plot(range(acc), val_loss, marker='.', label='val_acc')
+    plt.legend(loc='best')
+    plt.grid()
+    plt.xlabel('epoch')
+    plt.ylabel('acc')
+    plt.savefig('acc_xception.png')
+    plt.clf()
+
+    plt.plot(range(loss), loss, marker='.', label='loss')
+    plt.plot(range(loss), val_loss, marker='.', label='val_loss')
+    plt.legend(loc='best')
+    plt.grid()
+    plt.xlabel('epoch')
+    plt.ylabel('loss')
+    plt.savefig('loss_xception.png')
+    plt.clf()
+
 
 if __name__ == '__main__':
     args = parser.parse_args()

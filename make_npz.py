@@ -4,6 +4,7 @@ from keras.utils import to_categorical
 import numpy as np
 import os
 import argparse
+import random
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
@@ -19,6 +20,8 @@ parser.add_argument(
 def main(args):
 
     num_classes = 102
+    num_train = 4000
+    num_test = 800
     # prepare data
     # train images and labels: 7281
     # test images and labels: 1864
@@ -38,19 +41,44 @@ def main(args):
         image, label = line.split()
         x_test.append(image)
         y_test.append(int(label))
+
+    # shuffle data
+    index_train = list(range(len(x_train)))
+    index_test = list(range(len(x_test)))
+    random.shuffle(index_train)
+    random.shuffle(index_test)
+    x_train_shuffled = []
+    y_train_shuffled = []
+    x_test_shuffled = []
+    y_test_shuffled = []
+    for i in index_train:
+        x_train_shuffled.append(x_train[i])
+        y_train_shuffled.append(y_train[i])
+    for i in index_test:
+        x_test_shuffled.append(x_test[i])
+        y_test_shuffled.append(y_test[i])
+    del x_train
+    del y_train
+    del x_test
+    del y_test
+    train.close()
+    test.close()
+
+    # make numpy array
+    x_train = [img_to_array(load_img(path)) for path in x_train_shuffled[:num_train]]
+    y_train = [y for y in y_train_shuffled[:num_train]]
+    x_test = [img_to_array(load_img(path)) for path in x_test_shuffled[:num_test]]
+    y_test = [y for y in y_test_shuffled[:num_test]]
+
+    x_train = np.asarray(x_train)
+    y_train = np.asarray(y_train)
+    x_test = np.asarray(x_test)
+    y_test = np.asarray(y_test)
+
     print("%d train images were loaded" % len(x_train))
     print("%d train labels were loaded" % len(y_train))
     print("%d test images were loaded" % len(x_test))
     print("%d test labels were loaded" % len(y_test))
-    train.close()
-    test.close()
-
-
-    x_train = np.asarray([img_to_array((load_img(path))) for path in x_train])
-    y_train = np.asarray([y for y in y_train])
-    x_test = np.asarray([img_to_array(load_img(path)) for path in x_test])
-    y_test = np.asarray([y for y in y_test])
-
 
     # preprocess image data
     print("preprocessing image data...")
@@ -62,19 +90,12 @@ def main(args):
     y_train = to_categorical(y_train, num_classes)
     y_test = to_categorical(y_test, num_classes)
 
-    # shuffle
-    np.random.shuffle(x_train)
-    np.random.shuffle(y_train)
-    np.random.shuffle(x_test)
-    np.random.shuffle(y_test)
-
 
     print("Saving numpy array...")
-    np.save("x_train", x_train[:4000])
-    np.save("y_train", y_train[:4000])
-    np.save("x_test", x_test[:800])
-    np.save("y_test", y_test[:800])
-
+    np.save("x_train", x_train)
+    np.save("y_train", y_train)
+    np.save("x_test", x_test)
+    np.save("y_test", y_test)
 
 if __name__ == '__main__':
     args = parser.parse_args()
