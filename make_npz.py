@@ -1,8 +1,6 @@
-from keras.applications.xception import Xception, preprocess_input, decode_predictions
+from keras.applications.xception import preprocess_input
 from keras.preprocessing.image import load_img, img_to_array
 from keras.utils import to_categorical
-from keras.optimizers import Adadelta
-from keras.losses import categorical_crossentropy
 import numpy as np
 import os
 import argparse
@@ -26,23 +24,33 @@ def main(args):
     # test images and labels: 1864
     train = open(args.train_path, 'r')
     test = open(args.test_path, 'r')
-    train_tmp = list(map(lambda x: x.strip(), train.readlines()))
-    test_tmp = list(map(lambda x: x.strip(), test.readlines()))
-    train_tmp = [line.split() for line in train_tmp]
-    test_tmp = [line.split() for line in test_tmp]
-    x_train = [x for (x, y) in train_tmp]
-    y_train = [y for (x, y) in train_tmp]
-    x_test = [x for (x, y) in test_tmp]
-    y_test = [y for (x, y) in test_tmp]
+    x_train = []
+    y_train = []
+    x_test = []
+    y_test = []
+    for line in train.readlines():
+        line = line.strip()
+        image, label = line.split()
+        x_train.append(image)
+        y_train.append(int(label))
+    for line in test.readlines():
+        line = line.strip()
+        image, label = line.split()
+        x_test.append(image)
+        y_test.append(int(label))
     print("%d train images were loaded" % len(x_train))
     print("%d train labels were loaded" % len(y_train))
     print("%d test images were loaded" % len(x_test))
     print("%d test labels were loaded" % len(y_test))
+    train.close()
+    test.close()
 
-    x_train = np.asarray([img_to_array(load_img(path)) for path in x_train])
+
+    x_train = np.asarray([img_to_array((load_img(path))) for path in x_train])
     y_train = np.asarray([y for y in y_train])
     x_test = np.asarray([img_to_array(load_img(path)) for path in x_test])
     y_test = np.asarray([y for y in y_test])
+
 
     # preprocess image data
     print("preprocessing image data...")
@@ -54,19 +62,18 @@ def main(args):
     y_train = to_categorical(y_train, num_classes)
     y_test = to_categorical(y_test, num_classes)
 
-    # save numpy array
-    perm_train = np.random.permutation(len(x_train))
-    perm_test = np.random.permutation(len(x_test))
-    x_train = x_train[perm_train]
-    y_train = y_train[perm_train]
-    x_test = x_test[perm_test]
-    y_test = y_test[perm_test]
+    # shuffle
+    np.random.shuffle(x_train)
+    np.random.shuffle(y_train)
+    np.random.shuffle(x_test)
+    np.random.shuffle(y_test)
 
-    print("Saving numpt array...")
+
+    print("Saving numpy array...")
     np.save("x_train", x_train[:4000])
     np.save("y_train", y_train[:4000])
-    np.save("x_test", x_test[:1000])
-    np.save("y_test", y_test[:1000])
+    np.save("x_test", x_test[:800])
+    np.save("y_test", y_test[:800])
 
 
 if __name__ == '__main__':

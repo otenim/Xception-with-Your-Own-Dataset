@@ -24,7 +24,7 @@ def main(args):
     model = Xception(include_top=True, weights=None, classes=102)
 
     # hyper parameters
-    batch_size = 32
+    batch_size = 8
     num_classes = 102
     epochs = 100
 
@@ -33,7 +33,6 @@ def main(args):
     y_train = np.load('y_train.npy')
     x_test = np.load('x_test.npy')
     y_test = np.load('y_test.npy')
-
 
     # summary of the model
     model.summary()
