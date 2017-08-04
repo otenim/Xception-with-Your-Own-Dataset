@@ -66,8 +66,8 @@ def main(args):
     loss = hist.history['loss']
     val_loss = hist.history['val_loss']
 
-    plt.plot(range(acc), loss, marker='.', label='acc')
-    plt.plot(range(acc), val_loss, marker='.', label='val_acc')
+    plt.plot(range(epochs), loss, marker='.', label='acc')
+    plt.plot(range(epochs), val_loss, marker='.', label='val_acc')
     plt.legend(loc='best')
     plt.grid()
     plt.xlabel('epoch')
@@ -75,8 +75,8 @@ def main(args):
     plt.savefig('acc_xception.png')
     plt.clf()
 
-    plt.plot(range(loss), loss, marker='.', label='loss')
-    plt.plot(range(loss), val_loss, marker='.', label='val_loss')
+    plt.plot(range(epochs), loss, marker='.', label='loss')
+    plt.plot(range(epochs), val_loss, marker='.', label='val_loss')
     plt.legend(loc='best')
     plt.grid()
     plt.xlabel('epoch')
