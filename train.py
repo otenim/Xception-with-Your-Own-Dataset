@@ -75,8 +75,8 @@ def main(args):
     plt.savefig('acc_xception.png')
     plt.clf()
 
-    plt.plot(range(epochs), loss, marker='.', label='loss')
-    plt.plot(range(epochs), val_loss, marker='.', label='val_loss')
+    plt.plot(range(epochs), acc, marker='.', label='loss')
+    plt.plot(range(epochs), val_acc, marker='.', label='val_loss')
     plt.legend(loc='best')
     plt.grid()
     plt.xlabel('epoch')
