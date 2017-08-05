@@ -1,7 +1,5 @@
-from keras.applications.xception import Xception, preprocess_input, decode_predictions
-from keras.preprocessing.image import load_img, img_to_array
-from keras.utils import to_categorical
-from keras.optimizers import Adadelta, SGD
+from keras.applications.xception import Xception
+from keras.optimizers import SGD
 from keras.losses import categorical_crossentropy
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.models import Model
