@@ -7,6 +7,7 @@ import numpy as np
 import os
 import argparse
 import matplotlib.pyplot as plt
+import pickle as pkl
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
@@ -119,6 +120,16 @@ def main(args):
     plt.ylabel('loss')
     plt.savefig(os.path.join(current_directory, 'loss_xception_fine.png'))
     plt.clf()
+
+    # save plot data as pickle file
+    plot = {
+        'acc': acc,
+        'val_acc': val_acc,
+        'loss': loss,
+        'val_loss': val_loss,
+    }
+    with open(os.path.join(current_directory, 'plot_xception.dump'), 'wb') as f:
+        pkl.dump(plot, f)
 
 if __name__ == '__main__':
     args = parser.parse_args()
