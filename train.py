@@ -24,7 +24,7 @@ def main(args):
     # hyper parameters
     batch_size = 16
     num_classes = 102
-    epochs = 200
+    epochs = 100
 
     # Instantiate model
     model = Xception(include_top=True, weights=None, classes=num_classes)
