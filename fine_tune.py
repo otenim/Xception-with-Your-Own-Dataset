@@ -28,7 +28,8 @@ def main(args):
     batch_size_pre = 32
     num_classes = 102
     epochs_fine = 100
-    epochs_pre = 5
+    epochs_pre = 10
+    epochs = epochs_pre + epochs_fine
 
     # create the pre-trained model
     base_model = Xception(include_top=False, weights='imagenet')
@@ -52,12 +53,12 @@ def main(args):
     # compile model
     model.compile(
         loss=categorical_crossentropy,
-        optimizer=Adadelta(),
+        optimizer=SGD(lr=0.01, momentum=0.9),
         metrics=['accuracy']
     )
 
     # train the top layers
-    model.fit(
+    hist1 = model.fit(
         x_train,
         y_train,
         batch_size=batch_size_pre,
@@ -77,7 +78,7 @@ def main(args):
         metrics=['accuracy'])
 
     # train the whole model
-    hist = model.fit(
+    hist2 = model.fit(
         x_train,
         y_train,
         batch_size=batch_size_fine,
@@ -92,10 +93,10 @@ def main(args):
     print('Test accuracy:', score[1])
 
     # save graphs
-    acc = hist.history['acc']
-    val_acc = hist.history['val_acc']
-    loss = hist.history['loss']
-    val_loss = hist.history['val_loss']
+    acc = hist1.history['acc'].extend(hist2.history['acc'])
+    val_acc = hist1.history['val_acc'].extend(hist2.history['val_acc'])
+    loss = hist1.history['loss'].extend(hist2.history['loss'])
+    val_loss = hist1.history['val_loss'].extend(hist2.history['val_loss'])
 
     plt.plot(range(epochs), acc, marker='.', label='acc')
     plt.plot(range(epochs), val_acc, marker='.', label='val_acc')
