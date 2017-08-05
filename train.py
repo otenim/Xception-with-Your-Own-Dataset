@@ -72,7 +72,7 @@ def main(args):
     plt.grid()
     plt.xlabel('epoch')
     plt.ylabel('acc')
-    plt.savefig('acc_xception.png')
+    plt.savefig(os.path.join(current_directory, 'acc_xception.png'))
     plt.clf()
 
     plt.plot(range(epochs), acc, marker='.', label='loss')
@@ -81,7 +81,7 @@ def main(args):
     plt.grid()
     plt.xlabel('epoch')
     plt.ylabel('loss')
-    plt.savefig('loss_xception.png')
+    plt.savefig(os.path.join(current_directory, 'loss_xception.png'))
     plt.clf()
 
 
