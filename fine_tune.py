@@ -90,12 +90,18 @@ def main(args):
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
 
-    # save graphs
-    acc = hist1.history['acc'].extend(hist2.history['acc'])
-    val_acc = hist1.history['val_acc'].extend(hist2.history['val_acc'])
-    loss = hist1.history['loss'].extend(hist2.history['loss'])
-    val_loss = hist1.history['val_loss'].extend(hist2.history['val_loss'])
+    # concatinate plot data
+    acc = hist1.history['acc']
+    val_acc = hist1.history['val_acc']
+    loss = hist1.history['loss']
+    val_loss = hist1.history['val_loss']
 
+    acc.extend(hist2.history['acc'])
+    val_acc.extend(hist2.history['val_acc'])
+    loss.extend(hist2.history['loss'])
+    val_loss.extend(hist2.history['val_loss'])
+
+    # save graph image
     plt.plot(range(epochs), acc, marker='.', label='acc')
     plt.plot(range(epochs), val_acc, marker='.', label='val_acc')
     plt.legend(loc='best')
@@ -113,7 +119,6 @@ def main(args):
     plt.ylabel('loss')
     plt.savefig(os.path.join(current_directory, 'loss_xception_fine.png'))
     plt.clf()
-
 
 if __name__ == '__main__':
     args = parser.parse_args()
