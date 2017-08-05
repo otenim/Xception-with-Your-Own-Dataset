@@ -30,10 +30,10 @@ def main(args):
     model = Xception(include_top=True, weights=None, classes=num_classes)
 
     # prepare data
-    x_train = np.load('x_train.npy')
-    y_train = np.load('y_train.npy')
-    x_test = np.load('x_test.npy')
-    y_test = np.load('y_test.npy')
+    x_train = np.load(os.path.join(current_directory, 'x_train.npy'))
+    y_train = np.load(os.path.join(current_directory, 'y_train.npy'))
+    x_test = np.load(os.path.join(current_directory, 'x_test.npy'))
+    y_test = np.load(os.path.join(current_directory, 'y_test.npy'))
 
     # summary of the model
     model.summary()
