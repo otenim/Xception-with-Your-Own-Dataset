@@ -26,7 +26,7 @@ parser.add_argument(
     type=int,
     default=32,
 )
-parser.add_argument(    
+parser.add_argument(
     '--batch_size_fine',
     type=int,
     default=16,
@@ -53,6 +53,7 @@ def main(args):
     # add a global average pooling layer
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
+    x = Dense(1024, activation='relu')(x)
     predictions = Dense(num_classes, activation='softmax')(x)
     model = Model(inputs=base_model.inputs, outputs=predictions)
 

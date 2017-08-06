@@ -16,12 +16,27 @@ parser.add_argument(
     '--test_path',
     default=os.path.join(current_directory, 'src', 'test.txt')
 )
+parser.add_argument(
+    '--num_train',
+    type=int,
+    default=4000,
+)
+parser.add_argument(
+    '--num_test',
+    type=int,
+    default=400,
+)
+parser.add_argument(
+    '--num_classes',
+    type=int,
+    default=102,
+)
 
 def main(args):
 
-    num_classes = 102
-    num_train = 4000
-    num_test = 800
+    num_classes = args.num_classes
+    num_train = args.num_train
+    num_test = args.num_test
     # prepare data
     # train images and labels: 7281
     # test images and labels: 1864
