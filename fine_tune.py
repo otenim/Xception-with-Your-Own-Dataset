@@ -12,22 +12,39 @@ import pickle as pkl
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    '--train_path',
-    default=os.path.join(current_directory, 'src', 'train.txt')
+    '--epochs_pre',
+    type=int,
+    default=10,
 )
 parser.add_argument(
-    '--test_path',
-    default=os.path.join(current_directory, 'src', 'test.txt')
+    '--epochs_fine',
+    type=int,
+    default=200,
+)
+parser.add_argument(
+    '--batch_size_pre',
+    type=int,
+    default=32,
+)
+parser.add_argument(    
+    '--batch_size_fine',
+    type=int,
+    default=16,
+)
+parser.add_argument(
+    '--num_classes',
+    type=int,
+    default=102,
 )
 
 def main(args):
 
     # hyper parameters
-    batch_size_fine = 16
-    batch_size_pre = 32
-    num_classes = 102
-    epochs_fine = 100
-    epochs_pre = 10
+    batch_size_fine = args.batch_size_fine
+    batch_size_pre = args.batch_size_pre
+    num_classes = args.num_classes
+    epochs_fine = args.epochs_fine
+    epochs_pre = args.epochs_pre
     epochs = epochs_pre + epochs_fine
 
     # create the pre-trained model
@@ -52,7 +69,7 @@ def main(args):
     # compile model
     model.compile(
         loss=categorical_crossentropy,
-        optimizer=SGD(lr=0.01, momentum=0.9),
+        optimizer=SGD(lr=1e-2, momentum=0.9),
         metrics=['accuracy']
     )
 
@@ -72,7 +89,7 @@ def main(args):
 
     # recompile
     model.compile(
-        optimizer=SGD(lr=1e-4, momentum=0.9),
+        optimizer=SGD(lr=1e-3, momentum=0.9),
         loss=categorical_crossentropy,
         metrics=['accuracy'])
 
