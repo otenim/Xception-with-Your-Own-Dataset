@@ -11,12 +11,8 @@ import matplotlib.pyplot as plt
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    '--train_path',
-    default=os.path.join(current_directory, 'src', 'train.txt')
-)
-parser.add_argument(
-    '--test_path',
-    default=os.path.join(current_directory, 'src', 'test.txt')
+    '--dataset_path',
+    default=os.path.join(current_directory, 'dataset')
 )
 
 def main(args):
@@ -25,15 +21,16 @@ def main(args):
     batch_size = 16
     num_classes = 102
     epochs = 100
+    dataset_path = args.dataset_path
 
     # Instantiate model
     model = Xception(include_top=True, weights=None, classes=num_classes)
 
     # prepare data
-    x_train = np.load(os.path.join(current_directory, 'x_train.npy'))
-    y_train = np.load(os.path.join(current_directory, 'y_train.npy'))
-    x_test = np.load(os.path.join(current_directory, 'x_test.npy'))
-    y_test = np.load(os.path.join(current_directory, 'y_test.npy'))
+    x_train = np.load(os.path.join(dataset_path, 'x_train.npy'))
+    y_train = np.load(os.path.join(dataset_path, 'y_train.npy'))
+    x_test = np.load(os.path.join(dataset_path, 'x_test.npy'))
+    y_test = np.load(os.path.join(dataset_path, 'y_test.npy'))
 
     # summary of the model
     model.summary()
