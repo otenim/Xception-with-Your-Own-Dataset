@@ -36,6 +36,10 @@ parser.add_argument(
     type=int,
     default=102,
 )
+parser.add_argument(
+    '--dataset_path',
+    default=os.path.join(current_directory, 'dataset'),
+)
 
 def main(args):
 
@@ -46,6 +50,7 @@ def main(args):
     epochs_fine = args.epochs_fine
     epochs_pre = args.epochs_pre
     epochs = epochs_pre + epochs_fine
+    dataset_path = args.dataset_path
 
     # create the pre-trained model
     base_model = Xception(include_top=False, weights='imagenet')
@@ -58,10 +63,10 @@ def main(args):
     model = Model(inputs=base_model.inputs, outputs=predictions)
 
     # prepare data
-    x_train = np.load(os.path.join(current_directory, 'x_train.npy'))
-    y_train = np.load(os.path.join(current_directory, 'y_train.npy'))
-    x_test = np.load(os.path.join(current_directory, 'x_test.npy'))
-    y_test = np.load(os.path.join(current_directory, 'y_test.npy'))
+    x_train = np.load(os.path.join(dataset_path, 'x_train.npy'))
+    y_train = np.load(os.path.join(dataset_path, 'y_train.npy'))
+    x_test = np.load(os.path.join(dataset_path, 'x_test.npy'))
+    y_test = np.load(os.path.join(dataset_path, 'y_test.npy'))
 
     # first: train only the top layers
     for layer in base_model.layers:
