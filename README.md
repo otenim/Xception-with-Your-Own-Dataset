@@ -1,4 +1,4 @@
-Training Xception with your dataset
+Training Xception with your own dataset
 ====================================
 
 ## Description  
@@ -37,5 +37,25 @@ This directory contains 2 graphs(loss.png and acc.png) which shows the
 training results and 1 dump file which is consisted of the plot data.
 
 
-## How to train with my own dataset ?  
-in progress
+## How to train with my own dataset ?
+### What you have to prepare
+<dl>
+    <dt>The data set you want to learn</dt>
+    <dd>
+        You have to prepare a directory similar to the format of caltech101
+        as shown bellow:
+        `  root
+            ├── class_name_0
+            │   ├── hehe.png
+            │   └── hoge.png
+            ├── class_name_1
+            │   ├── momo.png
+            │   └── popo.png
+            └── class_name_2
+                └── pepe.png
+        `
+        
+    </dd>
+    <dt>classes.txt</dt>
+</dl>
+### How to tune the hyper parameters ?
