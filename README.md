@@ -4,6 +4,14 @@ Training Xception with your own dataset
 ## Description  
 This repository contains some scripts to train Xception devised by François Chollet, the author of keras which is a popular machine learning framework.  
 
+## Environment
+* GTX1070(8GB) A powerful GPU is required.
+* python 3.5.2
+* numpy 1.13.1
+* scipy 0.19.1
+* h5py 2.6.0
+* keras 2.0.6
+
 ## Demo
 In the demonstration, we train Xception with the dataset of caltech101
 (9145 images, 102 classes) as an example.  
@@ -50,11 +58,12 @@ The name of the image file in the class directory can be anything.
 You must prepare a text file that lists all class names.  
 It's very easy to make this file, I made it with a command like the following.  
 `ls root/ >> classes.txt`  
+Note: Here we have the name 'classes.txt' as an example, but in fact the name can be anything.  
 
 ### Let's train with your own dataset
 First, create requsite numpy arrays  
 `python resize.py root/ --width=299 --height=299`  
-`python create_dataset.py root_resized/ --classes=classes.txt --split=0.8`  
+`python create_dataset.py root_resized/ --classes=<path_to_classes.txt> --split=0.8`  
 
 4 numpy arrays(x_train.npy, y_train.npy, x_test.npy and y_test.npy) will
 be generated inthe 'dataset' directory.
