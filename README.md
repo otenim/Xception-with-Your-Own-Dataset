@@ -39,14 +39,9 @@ training results and 1 dump file which is consisted of the plot data.
 
 ## How to train with my own dataset ?
 ### What you have to prepare
-<dl>
-    <dt>The data set you want to learn</dt>
-    <dd>
-        You have to prepare a directory similar to the format of caltech101
-        as shown bellow:  
-    </dd>
-    <dt>classes.txt</dt>
-</dl>
-
+#### 1. A dataset you want to learning
+You have to prepare a directory similar to the format of caltech101
+as shown bellow:  
+#### 2. classes.txt
 ### How to tune the hyper parameters ?
 ![Imgur](http://i.imgur.com/qBa9cKr.png)  
