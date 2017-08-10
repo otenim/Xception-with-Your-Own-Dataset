@@ -52,7 +52,7 @@ It's very easy to make this file, I made it with a command like the following.
 `ls root/ >> classes.txt`  
 
 ### Let's train with your own dataset
-First, create requsite numpy arrays
+First, create requsite numpy arrays  
 `python resize.py root/ --width=299 --height=299`  
 `python create_dataset.py root_resized/ --classes=classes.txt --split=0.8`  
 
@@ -61,5 +61,5 @@ be generated inthe 'dataset' directory.
 
 Second, train Xception  
 `python fine_tune.py --epochs_pre=10 --epochs_fine=200
---batch_size_pre=32 --batch_size_fine=16  --num_classes=<plsease specify>
+--batch_size_pre=32 --batch_size_fine=16  --num_classes=<please specify>
 --dataset_path=<path_to_dataset>`  
