@@ -47,5 +47,6 @@ training results and 1 dump file which is consisted of the plot data.
     </dd>
     <dt>classes.txt</dt>
 </dl>
-![Imgur](http://i.imgur.com/qBa9cKr.png)  
+
 ### How to tune the hyper parameters ?
+![Imgur](http://i.imgur.com/qBa9cKr.png)  
