@@ -44,7 +44,7 @@ training results and 1 dump file which is consisted of the plot data.
     <dd>
         You have to prepare a directory similar to the format of caltech101
         as shown bellow:
-        `  root
+            root
             ├── class_name_0
             │   ├── hehe.png
             │   └── hoge.png
@@ -53,8 +53,7 @@ training results and 1 dump file which is consisted of the plot data.
             │   └── popo.png
             └── class_name_2
                 └── pepe.png
-        `
-        
+
     </dd>
     <dt>classes.txt</dt>
 </dl>
