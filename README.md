@@ -34,7 +34,7 @@ then retrain the whole model for 200 epochs with lower learning rate.
 
 When the training ends, 'result' directory is to be created.  
 This directory contains 2 graphs(loss.png and acc.png) which shows the
-training results(loss and accuracy) and 1 dump file which is consisted of the plot data.
+training results and 1 dump file which is consisted of the plot data.
 
 
 ## How to train with my own dataset ?  
