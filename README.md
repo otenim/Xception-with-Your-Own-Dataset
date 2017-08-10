@@ -10,7 +10,7 @@ In the demonstration, we train Xception with the dataset of caltech101
 
 #### 1. Preparing dataset
 First, donwload and expand the dataset with the following command.  
-`sh download_dataset.sh && tar xvf 101_ObjectCategories/`  
+`sh download_dataset.sh && tar xvf 101_ObjectCategories.tar.gz`  
 
 Second, resize the all images with the size (width, height) = (299, 299).  
 `python resize.py 101_ObjectCategories/`
