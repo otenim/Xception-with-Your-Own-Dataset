@@ -42,6 +42,7 @@ training results and 1 dump file which is consisted of the plot data.
 #### 1. A dataset you want to learn
 You have to prepare a directory which is similar to the format of caltech101
 as shown bellow:  
-![Imgur](http://i.imgur.com/qBa9cKr.png) 
+![Imgur](http://i.imgur.com/qBa9cKr.png)
+this his 
 #### 2. classes.txt
 ### How to tune the hyper parameters ?
