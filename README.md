@@ -32,5 +32,10 @@ In fine_tune.py, imagenet's weight is used as an initial weight of Xception.
 We first train only the top of the model(Classifier) for 10 epochs, and
 then retrain the whole model for 200 epochs with lower learning rate.  
 
-## How to train with my dataset ?  
+When the training ends, 'result' directory is to be created.  
+This directory contains 2 graphs(loss.png and acc.png) which shows the
+training results(loss and accuracy) and 1 dump file which is consisted of the plot data.
+
+
+## How to train with my own dataset ?  
 in progress
