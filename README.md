@@ -42,7 +42,24 @@ training results and 1 dump file which is consisted of the plot data.
 #### 1. A dataset you want to learn
 You have to prepare a directory which is similar to the format of caltech101
 as shown bellow:  
-![Imgur](http://i.imgur.com/qBa9cKr.png)
-this his 
+![Imgur](http://i.imgur.com/qBa9cKr.png)  
+As an example, this dataset has 3 classes and 5 images in total.  
+The name of the image file in the class directory can be anything.  
+
 #### 2. classes.txt
-### How to tune the hyper parameters ?
+You must prepare a text file that lists all class names.  
+It's very easy to make this file, I made it with a command like the following.  
+`ls root/ >> classes.txt`  
+
+### Let's train with your own dataset
+First, create requsite numpy arrays
+`python resize.py root/ --width=299 --height=299`  
+`python create_dataset.py root_resized/ --classes=classes.txt --split=0.8`  
+
+4 numpy arrays(x_train.npy, y_train.npy, x_test.npy and y_test.npy) will
+be generated inthe 'dataset' directory.
+
+Second, train Xception  
+`python fine_tune.py --epochs_pre=10 --epochs_fine=200
+--batch_size_pre=32 --batch_size_fine=16  --num_classes=<plsease specify>
+--dataset_path=<path_to_dataset>`  
