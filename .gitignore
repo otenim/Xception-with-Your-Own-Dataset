@@ -4,5 +4,6 @@
 *.png
 *.dump
 dataset/
+result/
 101_ObjectCategories/
 101_ObjectCategories_resized/

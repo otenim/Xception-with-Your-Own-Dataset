@@ -32,9 +32,8 @@ parser.add_argument(
     default=16,
 )
 parser.add_argument(
-    '--num_classes',
-    type=int,
-    default=102,
+    '--classes',
+    default=os.path.join(current_directory, 'classes.txt'),
 )
 parser.add_argument(
     '--dataset_path',
@@ -46,11 +45,12 @@ def main(args):
     # hyper parameters
     batch_size_fine = args.batch_size_fine
     batch_size_pre = args.batch_size_pre
-    num_classes = args.num_classes
     epochs_fine = args.epochs_fine
     epochs_pre = args.epochs_pre
     epochs = epochs_pre + epochs_fine
     dataset_path = args.dataset_path
+    with open(args.classes, 'r') as f:
+        num_classes = len(f.readlines())
 
     # create the pre-trained model
     base_model = Xception(include_top=False, weights='imagenet')
