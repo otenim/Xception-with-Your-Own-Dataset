@@ -126,13 +126,16 @@ def main(args):
     val_loss.extend(hist2.history['val_loss'])
 
     # save graph image
+    if os.path.exists(os.path.join(current_directory, 'result')) == False:
+        os.mkdir(os.path.join(current_directory, 'result'))
+
     plt.plot(range(epochs), acc, marker='.', label='acc')
     plt.plot(range(epochs), val_acc, marker='.', label='val_acc')
     plt.legend(loc='best')
     plt.grid()
     plt.xlabel('epoch')
     plt.ylabel('acc')
-    plt.savefig(os.path.join(current_directory, 'acc_xception_fine.png'))
+    plt.savefig(os.path.join(current_directory, 'result', 'acc.png'))
     plt.clf()
 
     plt.plot(range(epochs), loss, marker='.', label='loss')
@@ -141,7 +144,7 @@ def main(args):
     plt.grid()
     plt.xlabel('epoch')
     plt.ylabel('loss')
-    plt.savefig(os.path.join(current_directory, 'loss_xception_fine.png'))
+    plt.savefig(os.path.join(current_directory, 'result', 'loss.png'))
     plt.clf()
 
     # save plot data as pickle file
@@ -151,7 +154,7 @@ def main(args):
         'loss': loss,
         'val_loss': val_loss,
     }
-    with open(os.path.join(current_directory, 'plot_xception.dump'), 'wb') as f:
+    with open(os.path.join(current_directory, 'result', 'plot_xception.dump'), 'wb') as f:
         pkl.dump(plot, f)
 
 if __name__ == '__main__':
