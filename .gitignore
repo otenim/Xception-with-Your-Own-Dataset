@@ -6,3 +6,4 @@
 dataset/
 101_ObjectCategories/
 101_ObjectCategories_resized/
+!figures/*.png
