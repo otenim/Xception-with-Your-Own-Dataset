@@ -44,8 +44,8 @@ training results and 1 dump file which is consisted of the plot data.
     <dd>
         You have to prepare a directory similar to the format of caltech101
         as shown bellow:  
-        ![fig1](http://imgur.com/qBa9cKr)
     </dd>
     <dt>classes.txt</dt>
 </dl>
+![fig1](http://imgur.com/qBa9cKr)
 ### How to tune the hyper parameters ?
