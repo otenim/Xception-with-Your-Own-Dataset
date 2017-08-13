@@ -154,8 +154,11 @@ def main(args):
         'loss': loss,
         'val_loss': val_loss,
     }
-    with open(os.path.join(current_directory, 'result', 'plot_xception.dump'), 'wb') as f:
+    with open(os.path.join(current_directory, 'result', 'plot.dump'), 'wb') as f:
         pkl.dump(plot, f)
+
+    # save model
+    model.save(os.path.join(current_directory, 'result', 'epochs' + str(epochs) + '.h5'))
 
 if __name__ == '__main__':
     args = parser.parse_args()

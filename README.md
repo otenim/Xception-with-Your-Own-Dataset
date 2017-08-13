@@ -71,5 +71,5 @@ be generated inthe 'dataset' directory.
 
 Second, train Xception  
 `python fine_tune.py --epochs_pre=10 --epochs_fine=200
---batch_size_pre=32 --batch_size_fine=16  --classes=<path_to_classes.txt>
+--batch_size_pre=32 --batch_size_fine=16  --classes=<path_to_classes.txt>c
 --dataset_path=<path_to_dataset>`  
