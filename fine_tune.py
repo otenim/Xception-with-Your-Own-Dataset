@@ -12,6 +12,12 @@ import pickle as pkl
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument(
+    'dataset_path',
+)
+parser.add_argument(
+    '--classes',
+)
+parser.add_argument(
     '--epochs_pre',
     type=int,
     default=10,
@@ -31,14 +37,7 @@ parser.add_argument(
     type=int,
     default=16,
 )
-parser.add_argument(
-    '--classes',
-    default=os.path.join(current_directory, 'classes.txt'),
-)
-parser.add_argument(
-    '--dataset_path',
-    default=os.path.join(current_directory, 'dataset'),
-)
+
 
 def main(args):
 

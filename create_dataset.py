@@ -10,16 +10,16 @@ from keras.utils import to_categorical
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
-parser.add_argument('root_dir')
+parser.add_argument('root_path')
+parser.add_argument('classes')
 parser.add_argument('--split', type=float, default=0.8)
-parser.add_argument('--classes', default=os.path.join(current_dir, 'classes.txt'))
 
 def main(args):
-    root_dir = os.path.abspath(args.root_dir)
+    root_path = os.path.abspath(args.root_path)
 
     # make class list
     classes = []
-    f_classes = open(args.classes, 'r')
+    f_classes = open(os.path.abspath(args.classes), 'r')
     classes = list(map(lambda x: x.strip(),f_classes.readlines()))
     f_classes.close()
 
@@ -27,8 +27,8 @@ def main(args):
     sum_img = 0
     image_paths = []
     labels = []
-    for class_dir in os.listdir(root_dir):
-        class_path = os.path.join(root_dir, class_dir)
+    for class_dir in os.listdir(root_path):
+        class_path = os.path.join(root_path, class_dir)
         class_name = class_path.split('/')[-1]
 
         print("========== processing on class (%s) ==========" % (class_name))
