@@ -18,23 +18,28 @@ In the demonstration, we train Xception with the dataset of caltech101
 
 #### 1. Preparing dataset
 First, donwload and expand the dataset with the following command.  
-`sh download_dataset.sh && tar xvf 101_ObjectCategories.tar.gz`  
+`sh download_dataset.sh`  
+`tar xvf 101_ObjectCategories.tar.gz`  
 
 Second, resize the all images with the size (width, height) = (299, 299).  
 `python resize.py 101_ObjectCategories/`
 
-You'll get the resized dataset whose name is '101\_ObjectCategories\_resized'.  
+You'll get the resized dataset whose name is '101\_ObjectCategories\_resized'.
 
-#### 2. Create requsite numpy arrays
+#### 2. Make classes.txt
+You must prepare a text file that lists all class names.  
+`ls 101_ObjectCategories_resized > classes.txt`  
+
+#### 3. Create requsite numpy arrays
 Create the resusite numpy arrays with the following command.  
-`python create_dataset.py 101_ObjectCategories_resized/`  
+`python create_dataset.py 101_ObjectCategories_resized/ classes.txt`  
 
 Then, you'll get 'dataset' directory which contains
 x\_train.npy, y\_train.npy, x\_test.npy, and y\_test.npy  
 
-#### 3. Train the model
+#### 4. Train the model
 Training will start just by executing the following command.  
-`python fine_tune.py`  
+`python fine_tune.py dataset/ classes.txt`  
 
 In fine\_tune.py, imagenet's weight is used as an initial weight of Xception.  
 We first train only the top of the model(Classifier) for 10 epochs, and
