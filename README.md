@@ -57,7 +57,7 @@ The name of the image file in the class directory can be anything.
 #### 2. classes.txt
 You must prepare a text file that lists all class names.  
 It's very easy to make this file, I made it with a command like the following.  
-`ls root/ >> classes.txt`  
+`ls root/ > classes.txt`  
 
 Note: Here we have the name 'classes.txt' as an example, but in fact the name can be anything.  
 

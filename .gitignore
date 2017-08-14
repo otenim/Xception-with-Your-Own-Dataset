@@ -1,9 +1,12 @@
 *.npy
 *.jpg
 *.tar.gz
+*.tar
 *.png
 *.dump
 dataset/
 result/
 101_ObjectCategories/
 101_ObjectCategories_resized/
+256_ObjectCategories/
+256_ObjectCategories_resize/
