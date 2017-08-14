@@ -4,7 +4,6 @@ import os
 import argparse
 from PIL import Image
 import numpy as np
-import glob
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
@@ -35,7 +34,10 @@ def main(args):
             os.mkdir(dst_class_path)
 
         # open all images in dst_class_path and resize to target_size
-        for img_file in glob.glob(os.path.join(class_path, '*.jpg')):
+        for img_file in os.listdir(class_path):
+            # Not jpg files are evicted
+            if img_file.split('.')[-1] != 'jpg':
+                continue
             img_path = os.path.join(class_path, img_file)
             dst_img_path = os.path.join(dst_class_path, img_file)
             img = Image.open(img_path).convert('RGB')
