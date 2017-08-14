@@ -23,20 +23,20 @@ First, donwload and expand the dataset with the following command.
 Second, resize the all images with the size (width, height) = (299, 299).  
 `python resize.py 101_ObjectCategories/`
 
-You'll get the resized dataset whose name is '101_ObjectCategories_resized'.  
+You'll get the resized dataset whose name is '101\_ObjectCategories\_resized'.  
 
 #### 2. Create requsite numpy arrays
 Create the resusite numpy arrays with the following command.  
 `python create_dataset.py 101_ObjectCategories_resized/`  
 
 Then, you'll get 'dataset' directory which contains
-x_train.npy, y_train.npy, x_test.npy, and y_test.npy  
+x\_train.npy, y\_train.npy, x\_test.npy, and y\_test.npy  
 
 #### 3. Train the model
 Training will start just by executing the following command.  
 `python fine_tune.py`  
 
-In fine_tune.py, imagenet's weight is used as an initial weight of Xception.  
+In fine\_tune.py, imagenet's weight is used as an initial weight of Xception.  
 We first train only the top of the model(Classifier) for 10 epochs, and
 then retrain the whole model for 200 epochs with lower learning rate.  
 
@@ -66,10 +66,10 @@ First, create requsite numpy arrays
 `python resize.py root/ --width=299 --height=299`  
 `python create_dataset.py root_resized/ --classes=<path_to_classes.txt> --split=0.8`  
 
-4 numpy arrays(x_train.npy, y_train.npy, x_test.npy and y_test.npy) will
+4 numpy arrays(x\_train.npy, y\_train.npy, x\_test.npy and y\_test.npy) will
 be generated inthe 'dataset' directory.
 
 Second, train Xception  
 `python fine_tune.py --epochs_pre=10 --epochs_fine=200
---batch_size_pre=32 --batch_size_fine=16  --classes=<path_to_classes.txt>c
+--batch_size_pre=32 --batch_size_fine=16  --classes=<path_to_classes.txt>
 --dataset_path=<path_to_dataset>`  
