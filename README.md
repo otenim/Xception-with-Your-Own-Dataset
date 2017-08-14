@@ -43,7 +43,7 @@ Training will start just by executing the following command.
 
 In fine\_tune.py, imagenet's weight is used as an initial weight of Xception.  
 We first train only the top of the model(Classifier) for 10 epochs, and
-then retrain the whole model for 200 epochs with lower learning rate.  
+then retrain the entire model for 200 epochs with lower learning rate.  
 
 When the training ends, 'result' directory is to be created.  
 This directory contains 2 graphs(loss.png and acc.png) which shows the
@@ -69,12 +69,17 @@ Note: Here we have the name 'classes.txt' as an example, but in fact the name ca
 ### Let's train with your own dataset
 First, create requsite numpy arrays  
 `python resize.py root/ --width=299 --height=299`  
-`python create_dataset.py root_resized/ --classes=<path_to_classes.txt> --split=0.8`  
+`python create_dataset.py root_resized/ classes.txt --split=0.8`  
 
 4 numpy arrays(x\_train.npy, y\_train.npy, x\_test.npy and y\_test.npy) will
 be generated inthe 'dataset' directory.
 
 Second, train Xception  
-`python fine_tune.py --epochs_pre=10 --epochs_fine=200
---batch_size_pre=32 --batch_size_fine=16  --classes=<path_to_classes.txt>
---dataset_path=<path_to_dataset>`  
+`python fine_tune.py dataset/ classes.txt [--epochs_pre] [--epochs_fine] [--batch_size_pre] [--batch_size_fine]`  
+
+* epochs\_pre: Number of epochs when learning only top of the model(default=10)
+* epochs\_fine: Number of epochs when learning the entire model(default=200)
+* batch\_size\_pre: Batch size when learning only top of the model(default=32)
+* batch\_size\_fine: Batch size when learning the entire model(default=16)
+
+
