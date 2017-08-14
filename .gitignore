@@ -4,6 +4,8 @@
 *.tar
 *.png
 *.dump
+*.txt
+!classes.txt
 dataset/
 result/
 101_ObjectCategories/
