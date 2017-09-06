@@ -18,28 +18,16 @@ In the demonstration, we train Xception with the dataset of caltech101
 
 #### 1. Preparing dataset
 First, donwload and expand the dataset with the following command.  
-`sh download_dataset.sh`  
-`tar xvf 101_ObjectCategories.tar.gz`  
-
-Second, resize the all images with the size (width, height) = (299, 299).  
-`python resize.py 101_ObjectCategories/`
-
-You'll get the resized dataset whose name is '101\_ObjectCategories\_resized'.
+`$ sh download_dataset.sh`  
+`$ tar xvf 101_ObjectCategories.tar.gz`  
 
 #### 2. Make classes.txt
 You must prepare a text file that lists all class names.  
-`ls 101_ObjectCategories_resized > classes.txt`  
+`$ ls 101_ObjectCategories > classes.txt`  
 
-#### 3. Create requsite numpy arrays
-Create the resusite numpy arrays with the following command.  
-`python create_dataset.py 101_ObjectCategories_resized/ classes.txt`  
-
-Then, you'll get 'dataset' directory which contains
-x\_train.npy, y\_train.npy, x\_test.npy, and y\_test.npy  
-
-#### 4. Train the model
+#### 3. Train the model
 Training will start just by executing the following command.  
-`python fine_tune.py dataset/ classes.txt`  
+`$ python fine_tune.py 101_ObjectCategories/ classes.txt`  
 
 In fine\_tune.py, imagenet's weight is used as an initial weight of Xception.  
 We first train only the top of the model(Classifier) for 10 epochs, and
@@ -47,8 +35,8 @@ then retrain the entire model for 200 epochs with lower learning rate.
 
 When the training ends, 'result' directory is to be created.  
 This directory contains 2 graphs(loss.png and acc.png) which shows the
-training results and 1 dump file which is consisted of the plot data.
-
+training results, 1 dump file which is consisted of the plot data
+and 1 trained model file(model.h5).
 
 ## How to train with my own dataset ?
 ### What you have to prepare
@@ -67,19 +55,9 @@ It's very easy to make this file, I made it with a command like the following.
 Note: Here we have the name 'classes.txt' as an example, but in fact the name can be anything.  
 
 ### Let's train with your own dataset
-First, create requsite numpy arrays  
-`python resize.py root/ --width=299 --height=299`  
-`python create_dataset.py root_resized/ classes.txt --split=0.8`  
-
-4 numpy arrays(x\_train.npy, y\_train.npy, x\_test.npy and y\_test.npy) will
-be generated inthe 'dataset' directory.
-
-Second, train Xception  
-`python fine_tune.py dataset/ classes.txt [--epochs_pre] [--epochs_fine] [--batch_size_pre] [--batch_size_fine]`  
+`python fine_tune.py root/ classes.txt [--epochs_pre] [--epochs_fine] [--batch_size_pre] [--batch_size_fine]`  
 
 * epochs\_pre: Number of epochs when learning only top of the model(default=10)
 * epochs\_fine: Number of epochs when learning the entire model(default=200)
 * batch\_size\_pre: Batch size when learning only top of the model(default=32)
 * batch\_size\_fine: Batch size when learning the entire model(default=16)
-
-
