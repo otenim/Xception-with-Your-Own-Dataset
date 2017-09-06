@@ -25,11 +25,6 @@ parser.add_argument(
     default=os.path.join(current_directory, 'classes.txt'),
 )
 
-class result(object):
-    def __init__(self, prob, id):
-        self.prob = float(prob)
-        self.id = int(id)
-
 def main(args):
 
     # create model
