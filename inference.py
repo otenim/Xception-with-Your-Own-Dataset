@@ -28,17 +28,14 @@ parser.add_argument(
 def main(args):
 
     # create model
-    assert os.path.exists(args.model), 'No such model ' + str(args.model)
     model = load_model(args.model)
 
     # create classes
-    assert os.path.exists(args.classes), 'No such classes ' + str(args.classes)
     classes = []
     with open(args.classes, 'r') as f:
         classes = list(map(lambda x: x.strip(), f.readlines()))
 
     # load image
-    assert os.path.exists(args.image), 'No such image ' + str(args.image)
     img = image.load_img(args.image, target_size=(299, 299))
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
