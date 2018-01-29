@@ -117,7 +117,7 @@ def main(args):
 
 
     # create the pre-trained model
-    base_model = Xception(include_top=False, weights='imagenet')
+    base_model = Xception(include_top=False, weights='imagenet', input_shape=(299,299,3))
 
     # add a global average pooling layer
     x = base_model.output
