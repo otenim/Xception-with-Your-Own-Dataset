@@ -147,3 +147,8 @@ NOTE: [] indicates an optional argument. <> indicates a required argument.
 * `<classes>`: Path to a txt file where all the class names are listed at each line.
 * `<image>`: Path to an image file which is to be classied.
 * `[top_n]`: Show top n results (default: 10).
+
+
+## Future work
+
+* Expand our scripts to be able to train other popular classification models (for example, VGG16, VGG19, MobileNet, DenseNet, InceptionV3, etc.) without breaking changes.
