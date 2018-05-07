@@ -7,7 +7,7 @@ This repository contains some scripts to train [Xception](https://arxiv.org/pdf/
 
 ## Environments
 
-* GTX1070(8GB) A middle-range or more powerful GPU is required.
+* GTX1070 (8GB) A middle-range or more powerful GPU is required.
 * python 3.5.\*-3.6.\*
 * numpy 1.13.\*-1.14.\*
 * scipy 0.19.\*-1.0.\*
