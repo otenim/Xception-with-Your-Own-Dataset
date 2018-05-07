@@ -59,11 +59,11 @@ $ python inference.py ./result/model_fine_final.h5 classes.txt images/airplane.j
 
 Input image:
 
-![image](https://imgur.com/ynrJFeU)  
+![image](https://i.imgur.com/AsesiD0.jpg)  
 
 Output result:
 
-![result](https://imgur.com/SuEVztU)
+![result](https://i.imgur.com/5GeXqgl.png)
 
 ## How to train/inference with my own dataset ?
 
