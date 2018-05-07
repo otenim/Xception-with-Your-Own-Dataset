@@ -4,11 +4,14 @@ from keras.preprocessing import image
 from keras.losses import categorical_crossentropy
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.models import Model
+from keras.utils import to_categorical
+from keras.callbacks import ModelCheckpoint
 import math
 import numpy as np
 import os
 import argparse
 import matplotlib
+import imghdr
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pickle as pkl
@@ -16,42 +19,18 @@ import datetime
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    'dataset_root',
-)
-parser.add_argument(
-    'classes',
-)
-parser.add_argument(
-    '--epochs_pre',
-    type=int,
-    default=10,
-)
-parser.add_argument(
-    '--epochs_fine',
-    type=int,
-    default=200,
-)
-parser.add_argument(
-    '--batch_size_pre',
-    type=int,
-    default=32,
-)
-parser.add_argument(
-    '--batch_size_fine',
-    type=int,
-    default=16,
-)
-parser.add_argument(
-    '--split',
-    type=float,
-    default=0.8,
-)
-parser.add_argument(
-    '--result_root',
-    default=os.path.join(current_directory, 'result')
-)
-
+parser.add_argument('dataset_root')
+parser.add_argument('classes')
+parser.add_argument('result_root')
+parser.add_argument('--epochs_pre', type=int, default=5)
+parser.add_argument('--epochs_fine', type=int, default=50)
+parser.add_argument('--batch_size_pre', type=int, default=32)
+parser.add_argument('--batch_size_fine', type=int, default=16)
+parser.add_argument('--lr_pre', type=float, default=1e-3)
+parser.add_argument('--lr_fine', type=float, default=1e-4)
+parser.add_argument('--snapshot_period_pre', type=int, default=1)
+parser.add_argument('--snapshot_period_fine', type=int, default=1)
+parser.add_argument('--split', type=float, default=0.8)
 
 def generate_from_paths_and_labels(input_paths, labels, batch_size, input_size=(299,299)):
 
@@ -74,33 +53,38 @@ def generate_from_paths_and_labels(input_paths, labels, batch_size, input_size=(
 
 def main(args):
 
+    # ====================================================
+    # Preparation
+    # ====================================================
     # parameters
-    batch_size_fine = args.batch_size_fine
-    batch_size_pre = args.batch_size_pre
-    epochs_fine = args.epochs_fine
-    epochs_pre = args.epochs_pre
-    epochs = epochs_pre + epochs_fine
-    split = args.split
-    dataset_root = os.path.abspath(args.dataset_root)
-    result_root = os.path.abspath(args.result_root)
-    classes_path = os.path.abspath(args.classes)
-    with open(classes_path, 'r') as f:
+    epochs = args.epochs_pre + args.epochs_fine
+    args.dataset_root = os.path.expanduser(args.dataset_root)
+    args.result_root = os.path.expanduser(args.result_root)
+    args.classes = os.path.expanduser(args.classes)
+
+    # load class names
+    with open(args.classes, 'r') as f:
         classes = f.readlines()
         classes = list(map(lambda x: x.strip(), classes))
     num_classes = len(classes)
 
     # make input_paths and labels
     input_paths, labels = [], []
-    for class_name in os.listdir(dataset_root):
-        class_root = os.path.join(dataset_root, class_name)
+    for class_name in os.listdir(args.dataset_root):
+        class_root = os.path.join(args.dataset_root, class_name)
         class_id = classes.index(class_name)
-        for img in os.listdir(class_root):
-            if img.split('.')[-1] not in ['jpg', 'png']:
+        for path in os.listdir(class_root):
+            path = os.path.join(class_root, path)
+            if imghdr.what(path) == None:
+                # this is not an image file
                 continue
-            path = os.path.join(class_root, img)
             input_paths.append(path)
             labels.append(class_id)
-    labels = np.eye(num_classes, dtype=np.float32)[labels] # one-hot vectors
+
+    # convert to one-hot-vector format
+    labels = to_categorical(labels, num_classes=num_classes)
+
+    # convert to numpy array
     input_paths = np.array(input_paths)
 
     # shuffle dataset
@@ -109,106 +93,129 @@ def main(args):
     input_paths = input_paths[perm]
 
     # split dataset for training and validation
-    border = int(len(input_paths) * split)
+    border = int(len(input_paths) * args.split)
     train_labels, val_labels = labels[:border], labels[border:]
     train_input_paths, val_input_paths = input_paths[:border], input_paths[border:]
     print("Training on %d images and labels" % (len(train_input_paths)))
     print("Validation on %d images and labels" % (len(val_input_paths)))
 
+    # create a directory where results will be saved (if necessary)
+    if os.path.exists(args.result_root) == False:
+        os.makedirs(args.result_root)
 
-    # create the pre-trained model
+    # ====================================================
+    # Build a custom Xception
+    # ====================================================
+    # instantiate pre-trained Xception model
+    # the default input shape is (299, 299, 3)
+    # NOTE: the top classifier is not included
     base_model = Xception(include_top=False, weights='imagenet', input_shape=(299,299,3))
 
-    # add a global average pooling layer
+    # create a custom top classifier
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
     x = Dense(1024, activation='relu')(x)
     predictions = Dense(num_classes, activation='softmax')(x)
     model = Model(inputs=base_model.inputs, outputs=predictions)
 
-    # first: train only the top layers
+    # ====================================================
+    # Train only the top classifier
+    # ====================================================
+    # freeze the body layers
     for layer in base_model.layers:
         layer.trainable = False
 
     # compile model
     model.compile(
         loss=categorical_crossentropy,
-        optimizer=Adam(),
+        optimizer=Adam(lr=args.lr_pre),
         metrics=['accuracy']
     )
 
-    # train the top layers
-    hist1 = model.fit_generator(
+    # train
+    hist_pre = model.fit_generator(
         generator=generate_from_paths_and_labels(
             input_paths=train_input_paths,
             labels=train_labels,
-            batch_size=batch_size_pre
+            batch_size=args.batch_size_pre
         ),
-        steps_per_epoch=math.ceil(len(train_input_paths) / batch_size_pre),
-        epochs=epochs_pre,
+        steps_per_epoch=math.ceil(len(train_input_paths) / args.batch_size_pre),
+        epochs=args.epochs_pre,
         validation_data=generate_from_paths_and_labels(
             input_paths=val_input_paths,
             labels=val_labels,
-            batch_size=batch_size_pre
+            batch_size=args.batch_size_pre
         ),
-        validation_steps=math.ceil(len(val_input_paths) / batch_size_pre),
+        validation_steps=math.ceil(len(val_input_paths) / args.batch_size_pre),
         verbose=1,
+        callbacks=[
+            ModelCheckpoint(
+                filepath=os.path.join(args.result_root, 'model_pre_ep{epoch}_valloss{val_loss:.3f}.h5'),
+                period=args.snapshot_period_pre,
+            ),
+        ],
     )
+    model.save(os.path.join(args.result_root, 'model_pre_final.h5'))
 
-
-    # second: train all layers with lower learning rate
+    # ====================================================
+    # Train the whole model
+    # ====================================================
+    # set all the layers to be trainable
     for layer in model.layers:
         layer.trainable = True
 
     # recompile
     model.compile(
-        optimizer=Adam(lr=1.0e-4),
+        optimizer=Adam(lr=args.lr_fine),
         loss=categorical_crossentropy,
         metrics=['accuracy'])
 
-    # train the whole model
-    hist2 = model.fit_generator(
+    # train
+    hist_fine = model.fit_generator(
         generator=generate_from_paths_and_labels(
             input_paths=train_input_paths,
             labels=train_labels,
-            batch_size=batch_size_fine
+            batch_size=args.batch_size_fine
         ),
-        steps_per_epoch=math.ceil(len(train_input_paths) / batch_size_fine),
-        epochs=epochs_fine,
+        steps_per_epoch=math.ceil(len(train_input_paths) / args.batch_size_fine),
+        epochs=args.epochs_fine,
         validation_data=generate_from_paths_and_labels(
             input_paths=val_input_paths,
             labels=val_labels,
-            batch_size=batch_size_fine
+            batch_size=args.batch_size_fine
         ),
-        validation_steps=math.ceil(len(val_input_paths) / batch_size_fine),
+        validation_steps=math.ceil(len(val_input_paths) / args.batch_size_fine),
         verbose=1,
+        callbacks=[
+            ModelCheckpoint(
+                filepath=os.path.join(args.result_root, 'model_fine_ep{epoch}_valloss{val_loss:.3f}.h5'),
+                period=args.snapshot_period_fine,
+            ),
+        ],
     )
+    model.save(os.path.join(args.result_root, 'model_fine_final.h5'))
 
-
+    # ====================================================
+    # Create & save result graphs
+    # ====================================================
     # concatinate plot data
-    acc = hist1.history['acc']
-    val_acc = hist1.history['val_acc']
-    loss = hist1.history['loss']
-    val_loss = hist1.history['val_loss']
-    acc.extend(hist2.history['acc'])
-    val_acc.extend(hist2.history['val_acc'])
-    loss.extend(hist2.history['loss'])
-    val_loss.extend(hist2.history['val_loss'])
+    acc = hist_pre.history['acc']
+    val_acc = hist_pre.history['val_acc']
+    loss = hist_pre.history['loss']
+    val_loss = hist_pre.history['val_loss']
+    acc.extend(hist_fine.history['acc'])
+    val_acc.extend(hist_fine.history['val_acc'])
+    loss.extend(hist_fine.history['loss'])
+    val_loss.extend(hist_fine.history['val_loss'])
 
     # save graph image
-    d = datetime.datetime.today()
-    dirname = 'result_%s%s%s%s%s' % (d.year, d.month, d.day, d.hour, d.minute)
-    result_path = os.path.join(result_root, dirname)
-    if os.path.exists(result_path) == False:
-        os.makedirs(result_path)
-
     plt.plot(range(epochs), acc, marker='.', label='acc')
     plt.plot(range(epochs), val_acc, marker='.', label='val_acc')
     plt.legend(loc='best')
     plt.grid()
     plt.xlabel('epoch')
     plt.ylabel('acc')
-    plt.savefig(os.path.join(result_path, 'acc.png'))
+    plt.savefig(os.path.join(args.result_root, 'acc.png'))
     plt.clf()
 
     plt.plot(range(epochs), loss, marker='.', label='loss')
@@ -217,7 +224,7 @@ def main(args):
     plt.grid()
     plt.xlabel('epoch')
     plt.ylabel('loss')
-    plt.savefig(os.path.join(result_path, 'loss.png'))
+    plt.savefig(os.path.join(args.result_root, 'loss.png'))
     plt.clf()
 
     # save plot data as pickle file
@@ -227,11 +234,8 @@ def main(args):
         'loss': loss,
         'val_loss': val_loss,
     }
-    with open(os.path.join(result_path, 'plot.dump'), 'wb') as f:
+    with open(os.path.join(args.result_root, 'plot.dump'), 'wb') as f:
         pkl.dump(plot, f)
-
-    # save model
-    model.save(os.path.join(result_path, 'model.h5'))
 
 if __name__ == '__main__':
     args = parser.parse_args()
