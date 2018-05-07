@@ -51,7 +51,21 @@ In fine\_tune.py...
 * Then, retrain the whole model for 50 epochs with lower learning rate.
 * All the result data (model snapshot h5 format files, graphs) will be saved in `./result`.
 
-## How to train with my own dataset ?
+#### 4. Inference
+
+```bash
+$ python inference.py ./result/model_fine_final.h5 classes.txt images/airplane.jpg
+```
+
+Input image:
+
+![image](https://imgur.com/ynrJFeU)  
+
+Output result:
+
+![result](https://imgur.com/SuEVztU)
+
+## How to train/inference with my own dataset ?
 
 ### What you have to prepare
 
@@ -75,7 +89,7 @@ $ ls root/ > classes.txt
 
 The file name needs not to be 'classes.txt', but can be anything.
 
-### Let's train with your own dataset
+### Let's train your model on your own dataset !!
 
 ```bash
 $ python fine_tune.py root/ classes.txt <result_root> [epochs_pre] [epochs_fine] [batch_size_pre] [batch_size_fine] [lr_pre] [lr_fine] [snapshot_period_pre] [snapshot_period_fine]
@@ -96,4 +110,16 @@ For example, if you'd like to pre-train a model for 2 epochs and finetune it for
 
 ```bash
 $ python fine_tune.py root/ classes.txt ./result --epochs_pre 2 --epochs_fine 10 --lr_fine 5e-4
-``` 
+```
+
+### Let's inference with your trained model !!
+
+```bash
+$ python inference.py <model> <classes> <image> [top_n]
+```
+NOTE: [] indicates an optional argument. <> indicates a required argument.
+
+* `<model>`: Path to a keras model h5 format file.
+* `<classes>`: Path to a txt file where all the class names are listed at each line.
+* `<image>`: Path to an image file which is to be classied.
+* `[top_n]`: Show top n results (default: 10).
