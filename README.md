@@ -80,7 +80,7 @@ Output result:
 ![result](https://i.imgur.com/5GeXqgl.png)
 
 
-## How to train with my own dataset ?
+## How to train with your own dataset ?
 
 
 ### What you have to prepare
