@@ -11,12 +11,12 @@ This repository contains some scripts to train [Xception](https://arxiv.org/pdf/
 We tested our scripts in the following environment.
 
 * GTX1070 (8GB) A middle-range or more powerful GPU is required.
-* python 3.5.\*-3.6.\*
-* numpy 1.13.\*-1.17.\*
-* scipy 0.19.\*-1.3.\*
-* h5py 2.6.\*-2.10.\*
-* Keras 2.0.\*-2.3.\*
-* tensorflow-gpu 1.4.\*-1.15.\*
+* python 3.6.5
+* numpy 1.17.4
+* scipy 1.3.3
+* h5py 2.10.0
+* Keras 2.3.1
+* tensorflow-gpu 1.15.0
 
 
 ## Demo
@@ -134,8 +134,3 @@ NOTE: [] indicates an optional argument. <> indicates a required argument.
 * `<classes>`: Path to a txt file where all the class names are listed line by line.
 * `<image>`: Path to an image file that you would like to classify.
 * `[top_n]`: Show top n results (default: 10).
-
-
-## Future work
-
-* Expand our scripts to be able to train other popular classification models (for example, VGG16, VGG19, MobileNet, DenseNet, InceptionV3, etc.) without breaking changes.

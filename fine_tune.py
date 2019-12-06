@@ -213,23 +213,23 @@ def main(args):
     # Create & save result graphs
     # ====================================================
     # concatinate plot data
-    acc = hist_pre.history['acc']
-    val_acc = hist_pre.history['val_acc']
+    acc = hist_pre.history['accuracy']
+    val_acc = hist_pre.history['val_accuracy']
     loss = hist_pre.history['loss']
     val_loss = hist_pre.history['val_loss']
-    acc.extend(hist_fine.history['acc'])
-    val_acc.extend(hist_fine.history['val_acc'])
+    acc.extend(hist_fine.history['accuracy'])
+    val_acc.extend(hist_fine.history['val_accuracy'])
     loss.extend(hist_fine.history['loss'])
     val_loss.extend(hist_fine.history['val_loss'])
 
     # save graph image
-    plt.plot(range(epochs), acc, marker='.', label='acc')
-    plt.plot(range(epochs), val_acc, marker='.', label='val_acc')
+    plt.plot(range(epochs), acc, marker='.', label='accuracy')
+    plt.plot(range(epochs), val_acc, marker='.', label='val_accuracy')
     plt.legend(loc='best')
     plt.grid()
     plt.xlabel('epoch')
-    plt.ylabel('acc')
-    plt.savefig(os.path.join(args.result_root, 'acc.png'))
+    plt.ylabel('accuracy')
+    plt.savefig(os.path.join(args.result_root, 'accuracy.png'))
     plt.clf()
 
     plt.plot(range(epochs), loss, marker='.', label='loss')
@@ -243,8 +243,8 @@ def main(args):
 
     # save plot data as pickle file
     plot = {
-        'acc': acc,
-        'val_acc': val_acc,
+        'accuracy': acc,
+        'val_accuracy': val_acc,
         'loss': loss,
         'val_loss': val_loss,
     }
