@@ -1,8 +1,10 @@
 # Training Xception with your own dataset
 
+
 ## Description
 
 This repository contains some scripts to train [Xception](https://arxiv.org/pdf/1610.02357.pdf) introduced by François Chollet, the founder of Keras.
+
 
 ## Environments
 
@@ -16,9 +18,11 @@ We tested our scripts in the following environment.
 * Keras 2.0.\*-2.3.\*
 * tensorflow-gpu 1.4.\*-1.15.\*
 
+
 ## Demo
 
 Here, we'll show how to train Xception on the Caltech101 dataset (9145 images, 102 classes) as an example.
+
 
 #### 1. Prepare dataset
 
@@ -29,6 +33,7 @@ $ sh download_dataset.sh
 $ tar zxvf 101_ObjectCategories.tar.gz
 ```
 
+
 #### 2. Make classes.txt
 
 You must create a text file where all the class names are listed line by line.  
@@ -37,6 +42,7 @@ This can be easily done with the below command.
 ```bash
 $ ls 101_ObjectCategories > classes.txt
 ```
+
 
 #### 3. Train the model
 
@@ -51,6 +57,7 @@ In `fine_tune.py`...
 * In the second training stage, the whole model is trained for 50 epochs with a lower learning rate.
 * All the result data (serialized model files and figures) are to be saved under `result/`
 
+
 #### 4. Inference
 
 ```bash
@@ -63,9 +70,12 @@ $ python inference.py result/model_fine_final.h5 classes.txt images/airplane.jpg
 **[Output Result]**:  
 ![result](https://i.imgur.com/5GeXqgl.png)
 
+
 ## How to train with your own dataset ?
 
+
 ### What do you have to prepare ?
+
 
 #### 1. A dataset you wanna use
 
@@ -75,6 +85,7 @@ as shown bellow:
 
 The above example dataset has 3 classes and 5 images in total.
 Each class name must be unique, but the image files' can be anything.
+
 
 #### 2. classes.txt
 
@@ -86,6 +97,7 @@ $ ls root/ > classes.txt
 
 The file name does not need to be `classes.txt`, but
 you can name it as you want.
+
 
 ### Let's train your model on your own dataset !!
 
@@ -110,6 +122,7 @@ For example, if you'd like to pre-train a model for 2 epochs with leraning rate 
 $ python fine_tune.py root/ classes.txt result/ --epochs_pre 2 --epochs_fine 10 --lr_pre 5e-3 --lr_fine 5e-4
 ```
 
+
 ## How to inference with your trained model ?
 
 ```bash
@@ -121,6 +134,7 @@ NOTE: [] indicates an optional argument. <> indicates a required argument.
 * `<classes>`: Path to a txt file where all the class names are listed line by line.
 * `<image>`: Path to an image file that you would like to classify.
 * `[top_n]`: Show top n results (default: 10).
+
 
 ## Future work
 
