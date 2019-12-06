@@ -4,3 +4,6 @@
 256_ObjectCategories/
 256_ObjectCategories_resize/
 results/
+result/
+.vscode/
+.python-version
