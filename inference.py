@@ -1,17 +1,15 @@
-from keras.applications.xception import (
-    Xception, preprocess_input, decode_predictions
-)
+import argparse
+import numpy as np
+from keras.applications.xception import preprocess_input
 from keras.preprocessing import image
 from keras.models import load_model
-import numpy as np
-import os
-import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('model')
 parser.add_argument('classes')
 parser.add_argument('image')
 parser.add_argument('--top_n', type=int, default=10)
+
 
 def main(args):
 
@@ -38,6 +36,7 @@ def main(args):
         print("Top %d ====================" % (i + 1))
         print("Class name: %s" % (class_name))
         print("Probability: %.2f%%" % (prob))
+
 
 if __name__ == '__main__':
     args = parser.parse_args()
