@@ -1,3 +1,11 @@
+import math
+import os
+import argparse
+import matplotlib
+import imghdr
+import pickle as pkl
+import numpy as np
+import matplotlib.pyplot as plt
 from keras.applications.xception import Xception, preprocess_input
 from keras.optimizers import Adam
 from keras.preprocessing import image
@@ -6,17 +14,8 @@ from keras.layers import Dense, GlobalAveragePooling2D
 from keras.models import Model
 from keras.utils import to_categorical
 from keras.callbacks import ModelCheckpoint
-import math
-import numpy as np
-import os
-import argparse
-import matplotlib
-import imghdr
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import pickle as pkl
-import datetime
 
+matplotlib.use('Agg')
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset_root')
@@ -32,8 +31,9 @@ parser.add_argument('--snapshot_period_pre', type=int, default=1)
 parser.add_argument('--snapshot_period_fine', type=int, default=1)
 parser.add_argument('--split', type=float, default=0.8)
 
-def generate_from_paths_and_labels(input_paths, labels, batch_size, input_size=(299,299)):
 
+def generate_from_paths_and_labels(
+        input_paths, labels, batch_size, input_size=(299, 299)):
     num_samples = len(input_paths)
     while 1:
         perm = np.random.permutation(num_samples)
@@ -50,6 +50,7 @@ def generate_from_paths_and_labels(input_paths, labels, batch_size, input_size=(
             )))
             inputs = preprocess_input(inputs)
             yield (inputs, labels[i:i+batch_size])
+
 
 def main(args):
 
@@ -75,7 +76,7 @@ def main(args):
         class_id = classes.index(class_name)
         for path in os.listdir(class_root):
             path = os.path.join(class_root, path)
-            if imghdr.what(path) == None:
+            if imghdr.what(path) is None:
                 # this is not an image file
                 continue
             input_paths.append(path)
@@ -94,13 +95,15 @@ def main(args):
 
     # split dataset for training and validation
     border = int(len(input_paths) * args.split)
-    train_labels, val_labels = labels[:border], labels[border:]
-    train_input_paths, val_input_paths = input_paths[:border], input_paths[border:]
+    train_labels = labels[:border]
+    val_labels = labels[border:]
+    train_input_paths = input_paths[:border]
+    val_input_paths = input_paths[border:]
     print("Training on %d images and labels" % (len(train_input_paths)))
     print("Validation on %d images and labels" % (len(val_input_paths)))
 
     # create a directory where results will be saved (if necessary)
-    if os.path.exists(args.result_root) == False:
+    if os.path.exists(args.result_root) is False:
         os.makedirs(args.result_root)
 
     # ====================================================
@@ -109,7 +112,10 @@ def main(args):
     # instantiate pre-trained Xception model
     # the default input shape is (299, 299, 3)
     # NOTE: the top classifier is not included
-    base_model = Xception(include_top=False, weights='imagenet', input_shape=(299,299,3))
+    base_model = Xception(
+        include_top=False,
+        weights='imagenet',
+        input_shape=(299, 299, 3))
 
     # create a custom top classifier
     x = base_model.output
@@ -139,18 +145,22 @@ def main(args):
             labels=train_labels,
             batch_size=args.batch_size_pre
         ),
-        steps_per_epoch=math.ceil(len(train_input_paths) / args.batch_size_pre),
+        steps_per_epoch=math.ceil(
+            len(train_input_paths) / args.batch_size_pre),
         epochs=args.epochs_pre,
         validation_data=generate_from_paths_and_labels(
             input_paths=val_input_paths,
             labels=val_labels,
             batch_size=args.batch_size_pre
         ),
-        validation_steps=math.ceil(len(val_input_paths) / args.batch_size_pre),
+        validation_steps=math.ceil(
+            len(val_input_paths) / args.batch_size_pre),
         verbose=1,
         callbacks=[
             ModelCheckpoint(
-                filepath=os.path.join(args.result_root, 'model_pre_ep{epoch}_valloss{val_loss:.3f}.h5'),
+                filepath=os.path.join(
+                    args.result_root,
+                    'model_pre_ep{epoch}_valloss{val_loss:.3f}.h5'),
                 period=args.snapshot_period_pre,
             ),
         ],
@@ -177,18 +187,22 @@ def main(args):
             labels=train_labels,
             batch_size=args.batch_size_fine
         ),
-        steps_per_epoch=math.ceil(len(train_input_paths) / args.batch_size_fine),
+        steps_per_epoch=math.ceil(
+            len(train_input_paths) / args.batch_size_fine),
         epochs=args.epochs_fine,
         validation_data=generate_from_paths_and_labels(
             input_paths=val_input_paths,
             labels=val_labels,
             batch_size=args.batch_size_fine
         ),
-        validation_steps=math.ceil(len(val_input_paths) / args.batch_size_fine),
+        validation_steps=math.ceil(
+            len(val_input_paths) / args.batch_size_fine),
         verbose=1,
         callbacks=[
             ModelCheckpoint(
-                filepath=os.path.join(args.result_root, 'model_fine_ep{epoch}_valloss{val_loss:.3f}.h5'),
+                filepath=os.path.join(
+                    args.result_root,
+                    'model_fine_ep{epoch}_valloss{val_loss:.3f}.h5'),
                 period=args.snapshot_period_fine,
             ),
         ],
@@ -236,6 +250,7 @@ def main(args):
     }
     with open(os.path.join(args.result_root, 'plot.dump'), 'wb') as f:
         pkl.dump(plot, f)
+
 
 if __name__ == '__main__':
     args = parser.parse_args()
